@@ -24,12 +24,13 @@ jobs:
       - name: make check
         run: make check
       - name: ls
-        run: |
-          mkdir test
-          cp jq test/jq
-          cd test
-          chmod +x jq
-          ./jq --version
+        run: ls
+      - name: save artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: 'jq'
 
   make-arm64:
       runs-on: ubuntu-latest
@@ -56,3 +57,11 @@ jobs:
               ./configure --with-oniguruma=builtin
               make -j8
               make check
+        - name: ls
+          run: ls
+        - name: save artifacts
+          uses: skx/github-action-publish-binaries@master
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            args: 'jq'
