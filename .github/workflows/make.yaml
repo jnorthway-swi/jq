@@ -78,9 +78,6 @@ jobs:
               autoreconf -fi
               ./configure --with-oniguruma=builtin
               make -j8 LDFLAGS=-all-static
-        - name: Check Test Results
-          if: always()
-          run: cat test-suite.log
         - name: Get release
           id: get_release
           uses: bruceadams/get-release@v1.3.2
