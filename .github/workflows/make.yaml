@@ -78,7 +78,6 @@ jobs:
               autoreconf -fi
               ./configure --with-oniguruma=builtin
               make -j8 LDFLAGS=-all-static
-              make check
         - name: Check Test Results
           if: always()
           run: cat test-suite.log
