@@ -37,6 +37,7 @@ jobs:
           with:
             base_image: raspios_lite_arm64:latest
             bind_mount_repository: true
+            image_additional_mb: 1024
             commands: |
               kernel_version=`apt list --installed | grep raspberrypi-kernel | awk '{ print $2 }' | sed -e 's|1:||g'`
               arch=`apt list --installed | grep raspberrypi-kernel | awk '{ print $3 }'`
