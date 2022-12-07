@@ -77,7 +77,11 @@ jobs:
               apt-get install --no-install-recommends -y libasound2-dev autoconf automake make gcc libc6-dev git-all libtool
               autoreconf -fi
               ./configure --with-oniguruma=builtin
-              make -j8 LDFLAGS=-all-static
+              make -j8
+              make check
+        - name: Check Test Results
+          if: always()
+          run: cat test-suite.log
         - name: Get release
           id: get_release
           uses: bruceadams/get-release@v1.3.2
