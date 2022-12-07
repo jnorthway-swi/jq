@@ -36,7 +36,14 @@ jobs:
           id: build_image
           with:
             base_image: raspios_lite_arm64:latest
+            bind_mount_repository: true
             commands: |
+              kernel_version=`apt list --installed | grep raspberrypi-kernel | awk '{ print $2 }' | sed -e 's|1:||g'`
+              arch=`apt list --installed | grep raspberrypi-kernel | awk '{ print $3 }'`
+              wget -q http://archive.raspberrypi.org/debian/pool/main/r/raspberrypi-firmware/raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
+              dpkg --install raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
+              apt-get update -y --allow-releaseinfo-change
+              apt-get install --no-install-recommends -y libasound2-dev make gcc libc6-dev
               autoreconf -fi
               ./configure --with-oniguruma=builtin
               make -j8
