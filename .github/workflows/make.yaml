@@ -7,10 +7,8 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  make-amd64:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: submodule update
@@ -25,3 +23,21 @@ jobs:
         run: make -j8
       - name: make check
         run: make check
+
+  make-arm64:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - name: submodule update
+          run: |
+            git submodule update --init
+            git submodule update
+        - uses: pguyot/arm-runner-action@v2
+          id: build_image
+          with:
+            base_image: raspios_lite_arm64:latest
+            commands: |
+              autoreconf -fi
+              ./configure --with-oniguruma=builtin
+              make -j8
+              make check
