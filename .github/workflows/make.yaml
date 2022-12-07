@@ -23,6 +23,9 @@ jobs:
         run: make -j8
       - name: make check
         run: make check
+      - name: ls
+        run: |
+          ls
 
   make-arm64:
       runs-on: ubuntu-latest
