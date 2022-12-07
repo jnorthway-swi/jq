@@ -30,6 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          releaseId: amd64-latest
           args: 'jq'
 
   make-arm64:
@@ -64,4 +65,5 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
+            releaseId: arm64-latest
             args: 'jq'
