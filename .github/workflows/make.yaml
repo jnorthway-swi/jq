@@ -25,7 +25,11 @@ jobs:
         run: make check
       - name: ls
         run: |
-          ls
+          mkdir test
+          cp jq test/jq
+          cd test
+          chmod +x jq
+          ./jq --version
 
   make-arm64:
       runs-on: ubuntu-latest
