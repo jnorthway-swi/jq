@@ -69,12 +69,12 @@ jobs:
             bind_mount_repository: true
             image_additional_mb: 1024
             commands: |
-              kernel_version=`apt list --installed | grep raspberrypi-kernel | awk '{ print $2 }' | sed -e 's|1:||g'`
-              arch=`apt list --installed | grep raspberrypi-kernel | awk '{ print $3 }'`
-              wget -q http://archive.raspberrypi.org/debian/pool/main/r/raspberrypi-firmware/raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
-              dpkg --install raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
-              apt-get update -y --allow-releaseinfo-change
-              apt-get install --no-install-recommends -y libasound2-dev autoconf automake make gcc libc6-dev git-all libtool
+              #kernel_version=`apt list --installed | grep raspberrypi-kernel | awk '{ print $2 }' | sed -e 's|1:||g'`
+              #arch=`apt list --installed | grep raspberrypi-kernel | awk '{ print $3 }'`
+              #wget -q http://archive.raspberrypi.org/debian/pool/main/r/raspberrypi-firmware/raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
+              #dpkg --install raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
+              apt-get update -y
+              apt-get install -y libasound2-dev autoconf automake make gcc libc6-dev git-all libtool build-essential
               autoreconf -fi
               ./configure --with-oniguruma=builtin
               make -j8 LDFLAGS=-all-static
