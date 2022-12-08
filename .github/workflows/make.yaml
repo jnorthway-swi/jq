@@ -65,7 +65,7 @@ jobs:
         - uses: pguyot/arm-runner-action@v2
           id: build_image
           with:
-            base_image: raspios_lite_arm64:latest
+            base_image: raspi_4_bullseye:20220121
             bind_mount_repository: true
             image_additional_mb: 1024
             commands: |
@@ -77,7 +77,7 @@ jobs:
               apt-get install --no-install-recommends -y libasound2-dev autoconf automake make gcc libc6-dev git-all libtool
               autoreconf -fi
               ./configure --with-oniguruma=builtin
-              make -j8
+              make -j8 LDFLAGS=-all-static
               make check
         - name: Check Test Results
           if: always()
