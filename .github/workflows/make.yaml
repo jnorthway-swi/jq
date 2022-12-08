@@ -55,45 +55,36 @@ jobs:
           asset_content_type: application/octet-stream
 
   make-arm64:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: submodule update
-          run: |
-            git submodule update --init
-            git submodule update
-        - uses: pguyot/arm-runner-action@v2
-          id: build_image
-          with:
-            base_image: raspi_4_bullseye:20220121
-            bind_mount_repository: true
-            image_additional_mb: 1024
-            commands: |
-              #kernel_version=`apt list --installed | grep raspberrypi-kernel | awk '{ print $2 }' | sed -e 's|1:||g'`
-              #arch=`apt list --installed | grep raspberrypi-kernel | awk '{ print $3 }'`
-              #wget -q http://archive.raspberrypi.org/debian/pool/main/r/raspberrypi-firmware/raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
-              #dpkg --install raspberrypi-kernel-headers_${kernel_version}_${arch}.deb
-              apt-get update -y
-              apt-get install -y libasound2-dev autoconf automake make gcc libc6-dev git libtool build-essential
-              autoreconf -fi
-              ./configure --with-oniguruma=builtin
-              make -j8 LDFLAGS=-all-static
-              make check
-        - name: Check Test Results
-          if: always()
-          run: cat test-suite.log
-        - name: Get release
-          id: get_release
-          uses: bruceadams/get-release@v1.3.2
-          env:
-            GITHUB_TOKEN: ${{ github.token }}
-        - name: Upload Release Asset
-          id: upload-release-asset 
-          uses: actions/upload-release-asset@v1
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            upload_url: ${{ steps.get_release.outputs.upload_url }}
-            asset_path: ./jq
-            asset_name: jq-arm64
-            asset_content_type: application/octet-stream
+    runs-on: [self-hosted, linux, ARM64]
+    steps:
+      - uses: actions/checkout@v3
+      - name: submodule update
+        run: |
+          git submodule update --init
+          git submodule update
+      - name: auto reconfigure
+        run: autoreconf -fi
+      - name: configure
+        run: ./configure --with-oniguruma=builtin
+      - name: make
+        run: make -j8 LDFLAGS=-all-static
+      - name: make check
+        run: make check
+      - name: Check Test Results
+        if: always()
+        run: cat test-suite.log
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.3.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ./jq
+          asset_name: jq-arm64
+          asset_content_type: application/octet-stream
